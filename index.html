@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NEBAUTO — L'automobile, sans compromis</title>
+<meta name="description" content="NEBAUTO : achat, revente, location, petite mécanique, aide à l'achat et convoyage. Une exigence, aucun compromis.">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="color-scheme" content="dark">
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NEBAUTO">
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="NEBAUTO — L'automobile, sans compromis">
+<meta property="og:description" content="Achat, revente, location, petite mécanique, aide à l'achat et convoyage.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1711523164285-71e1dbb948ca?auto=format&fit=crop&w=1200&q=80">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<a href="#hero" class="skip-link">Aller au contenu</a>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header" id="siteHeader">
+  <div class="header-inner container">
+    <a href="#hero" class="logo" aria-label="NEBAUTO — Accueil">
+      <span class="logo-ring">N</span>
+      <span class="logo-word">NEBAUTO</span>
+    </a>
+
+    <div class="header-actions">
+      <button class="btn-line btn-line-sm" type="button" data-open-contact>Contact</button>
+      <button class="menu-trigger" id="menuTrigger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navOverlay">
+        <span class="menu-trigger-lines" aria-hidden="true"><span></span><span></span></span>
+        <span class="menu-trigger-label">Menu</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ FULLSCREEN NAV OVERLAY ============ -->
+<div class="nav-overlay" id="navOverlay" aria-hidden="true">
+  <nav aria-label="Navigation principale">
+    <ol>
+      <li><a href="#hero"><span class="nav-idx">01</span><span>Accueil</span></a></li>
+      <li><a href="#services"><span class="nav-idx">02</span><span>Services</span></a></li>
+      <li><a href="#selection"><span class="nav-idx">03</span><span>Sélection</span></a></li>
+      <li><a href="#zone"><span class="nav-idx">04</span><span>Zone d'intervention</span></a></li>
+      <li><a href="#faq"><span class="nav-idx">05</span><span>FAQ</span></a></li>
+    </ol>
+  </nav>
+  <div class="nav-overlay-footer">
+    <a href="mailto:nebauto@gmail.com" data-email-link><span data-email-text>nebauto@gmail.com</span></a>
+    <button type="button" data-open-contact>Formulaire de contact</button>
+  </div>
+</div>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="hero">
+    <div class="hero-media">
+      <img src="https://images.unsplash.com/photo-1711523164285-71e1dbb948ca?auto=format&fit=crop&w=2000&q=80" alt="" loading="eager" fetchpriority="high">
+      <div class="hero-scrim"></div>
+    </div>
+
+    <div class="container hero-content">
+      <h1 data-reveal>L'automobile,<br><em>sans compromis.</em></h1>
+      <p class="hero-sub" data-reveal>Achat, entretien, location et recherche sur mesure — une seule exigence, la qualité.</p>
+      <button class="btn-line" type="button" data-open-contact data-reveal>Discuter de mon projet</button>
+    </div>
+
+    <a href="#statement" class="hero-scroll-hint">
+      <span>Défiler</span>
+      <i></i>
+    </a>
+  </section>
+
+  <!-- ============ STATEMENT ============ -->
+  <section class="statement" id="statement">
+    <div class="container statement-inner">
+      <p class="statement-text" data-reveal>
+        Nous refusons de choisir entre un prix juste et un travail exigeant.
+        Chaque véhicule est contrôlé, chaque intervention est expliquée,
+        chaque devis est transparent — <em>sans exception.</em>
+      </p>
+      <p class="statement-sign" data-reveal>— L'équipe NEBAUTO</p>
+    </div>
+  </section>
+
+  <!-- ============ SERVICES ============ -->
+  <section class="section services" id="services">
+    <div class="container">
+      <div class="section-label" data-reveal>
+        <span class="eyebrow">Nos métiers</span>
+        <h2>Ce que nous faisons</h2>
+      </div>
+
+      <ol class="service-list" data-reveal>
+        <li>
+          <span class="num">01</span>
+          <span class="s-title">Achat</span>
+          <span class="s-desc">Estimation rapide, paiement sécurisé, prise en charge immédiate.</span>
+        </li>
+        <li>
+          <span class="num">02</span>
+          <span class="s-title">Revente</span>
+          <span class="s-desc">Véhicules contrôlés, historique vérifié, garantie incluse.</span>
+        </li>
+        <li>
+          <span class="num">03</span>
+          <span class="s-title">Location</span>
+          <span class="s-desc">Courte ou longue durée, disponibilité rapide.</span>
+        </li>
+        <li>
+          <span class="num">04</span>
+          <span class="s-title">Petite mécanique</span>
+          <span class="s-desc">Entretien courant, diagnostic, tarifs transparents.</span>
+        </li>
+        <li>
+          <span class="num">05</span>
+          <span class="s-title">Aide à l'achat</span>
+          <span class="s-desc">Vous mandatez, nous négocions le véhicule idéal.</span>
+        </li>
+        <li>
+          <span class="num">06</span>
+          <span class="s-title">Convoyage</span>
+          <span class="s-desc">Livraison de votre véhicule, partout en France.</span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ SELECTION (auto-scrolling carousel) ============ -->
+  <section class="section selection" id="selection">
+    <div class="container">
+      <div class="section-label" data-reveal>
+        <span class="eyebrow">Sélection</span>
+        <h2>Passés entre nos mains</h2>
+      </div>
+    </div>
+
+    <div class="selection-viewport" data-reveal>
+      <div class="selection-track" id="selTrack">
+        <figure class="selection-card">
+          <img src="https://images.unsplash.com/photo-1731834888360-7fd7edd6a037?auto=format&fit=crop&w=1000&q=80" alt="Citadine">
+          <figcaption>Citadine</figcaption>
+        </figure>
+        <figure class="selection-card">
+          <img src="https://images.unsplash.com/photo-1765416401686-bead36c5acfa?auto=format&fit=crop&w=1000&q=80" alt="Compacte sportive">
+          <figcaption>Compacte sportive</figcaption>
+        </figure>
+        <figure class="selection-card">
+          <img src="https://images.unsplash.com/photo-1776043904123-0988a0c3c60c?auto=format&fit=crop&w=1000&q=80" alt="SUV">
+          <figcaption>SUV</figcaption>
+        </figure>
+        <figure class="selection-card">
+          <img src="https://images.unsplash.com/photo-1712214910040-1f7f5925b16a?auto=format&fit=crop&w=1000&q=80" alt="Berline">
+          <figcaption>Berline</figcaption>
+        </figure>
+        <figure class="selection-card">
+          <img src="https://images.unsplash.com/photo-1760713164476-7eb5063b3d07?auto=format&fit=crop&w=1000&q=80" alt="Break familial">
+          <figcaption>Break familial</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ZONE / GLOBE ============ -->
+  <section class="section zone-section" id="zone">
+    <div class="globe-wrap" aria-hidden="true">
+      <canvas id="globeCanvas"></canvas>
+      <div class="globe-fade"></div>
+    </div>
+
+    <div class="container zone-grid">
+      <div class="zone-content" data-reveal>
+        <span class="eyebrow">Zone d'intervention</span>
+        <h2>Basés en <em data-zone-region>Île-de-France</em></h2>
+        <p class="zone-lead">
+          Achat, vente, location et mécanique en <strong data-zone-city>région parisienne</strong> —
+          convoyage et recherche sur mesure partout en France.
+        </p>
+        <button class="btn-line" type="button" data-open-contact>Prendre contact</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="section faq-section" id="faq">
+    <div class="container faq-grid">
+      <div class="section-label" data-reveal>
+        <span class="eyebrow">FAQ</span>
+        <h2>Questions fréquentes</h2>
+      </div>
+
+      <div class="faq-list" data-reveal>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>Comment fonctionne l'aide à l'achat ?</span>
+            <span class="faq-plus" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <p>Vous nous confiez votre budget et vos critères. Nous cherchons, vérifions et négocions
+            le véhicule pour vous, sans surcoût caché.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>Les véhicules revendus sont-ils garantis ?</span>
+            <span class="faq-plus" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <p>Oui. Chaque véhicule est contrôlé avant mise en vente et bénéficie d'une garantie
+            adaptée au modèle, détaillée avant l'achat.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>Quels documents pour vendre mon véhicule ?</span>
+            <span class="faq-plus" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <p>Carte grise, contrôle technique de moins de 6 mois et une pièce d'identité. On vous
+            guide sur le reste lors de l'estimation.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>Combien coûte un convoyage ?</span>
+            <span class="faq-plus" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <p>Le tarif dépend de la distance et du véhicule. Devis gratuit sur simple demande.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>Intervenez-vous en dehors de votre région ?</span>
+            <span class="faq-plus" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <p>Nous intervenons principalement en Île-de-France, mais l'aide à l'achat et le
+            convoyage fonctionnent partout en France.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-cta" data-reveal>
+      <h2>Prêt à commencer ?</h2>
+      <button class="btn-line btn-line-lg" type="button" data-open-contact>Prendre contact</button>
+    </div>
+
+    <div class="footer-bottom">
+      <a href="#hero" class="logo">
+        <span class="logo-ring">N</span>
+        <span class="logo-word">NEBAUTO</span>
+      </a>
+      <div class="footer-links">
+        <span>Île-de-France</span>
+      </div>
+      <p class="footer-copy">© <span id="year"></span> NEBAUTO</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ CONTACT MODAL ============ -->
+<div class="modal-overlay" id="contactOverlay" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+    <button class="modal-close" type="button" data-close-contact aria-label="Fermer le formulaire">
+      <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+
+    <span class="eyebrow">Contact</span>
+    <h3 id="contactTitle">Parlons de votre projet</h3>
+
+    <form id="contactForm" novalidate>
+      <div class="form-row">
+        <label for="cf-name">Nom complet</label>
+        <input id="cf-name" name="name" type="text" autocomplete="name" required placeholder="Jean Dupont">
+      </div>
+
+      <div class="form-row">
+        <label for="cf-email">Email</label>
+        <input id="cf-email" name="email" type="email" autocomplete="email" required placeholder="vous@email.fr">
+      </div>
+
+      <div class="form-row">
+        <label for="cf-phone">Téléphone</label>
+        <input id="cf-phone" name="phone" type="tel" autocomplete="tel" placeholder="06 00 00 00 00">
+      </div>
+
+      <div class="form-row">
+        <label for="cf-subject">Type de demande</label>
+        <select id="cf-subject" name="subject">
+          <option value="achat">Achat de véhicule</option>
+          <option value="revente">Revente / estimation</option>
+          <option value="location">Location</option>
+          <option value="mecanique">Petite mécanique</option>
+          <option value="aide-achat">Aide à l'achat</option>
+          <option value="convoyage">Convoyage</option>
+          <option value="autre">Autre demande</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label for="cf-message">Message</label>
+        <textarea id="cf-message" name="message" rows="3" placeholder="Décrivez votre besoin..."></textarea>
+      </div>
+
+      <button type="submit" class="btn-line btn-line-lg btn-block">Envoyer</button>
+    </form>
+
+    <div class="form-success" id="formSuccess" hidden>
+      <h4>Merci.</h4>
+      <p>Votre demande a bien été enregistrée. Nous revenons vers vous sous 24h ouvrées.</p>
+      <button class="btn-line" type="button" data-close-contact>Fermer</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/globe.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>
