@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://delcoco95.github.io/nebauto/sitemap.xml
