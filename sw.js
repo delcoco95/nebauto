@@ -1,11 +1,11 @@
-const CACHE_VERSION = "nebauto-v10";
+const CACHE_VERSION = "nebauto-v11";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./offline.html",
-  "./css/style.css?v=10",
-  "./js/main.js?v=10",
-  "./js/globe.js?v=10",
+  "./css/style.css?v=11",
+  "./js/main.js?v=11",
+  "./js/globe.js?v=11",
   "./manifest.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png",

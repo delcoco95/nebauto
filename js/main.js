@@ -11,10 +11,9 @@
     city: "région parisienne",
     region: "Île-de-France",
     coords: { lat: 48.8566, lon: 2.3522 },
-    // FormSubmit AJAX endpoint: every questionnaire / contact request is emailed to this inbox.
-    // Once activated, the address can be replaced by the random alias FormSubmit provides
-    // so the inbox stays out of the public source. Empty = fall back to a pre-filled email.
-    formEndpoint: "https://formsubmit.co/ajax/nedjpro06@gmail.com",
+    // Formspree form: the receiving inbox is configured on Formspree's side, never in this source.
+    // Empty = fall back to a pre-filled email to CONFIG.email.
+    formEndpoint: "https://formspree.io/f/xbgjbqgy",
   };
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -473,14 +472,10 @@
         const res = await fetch(CONFIG.formEndpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify(
-            Object.assign({ _subject: subject, _template: "table", _captcha: "false", _replyto: replyTo || "" }, data)
-          ),
+          // Formspree uses _subject for the email subject and _replyto for the Reply-To header.
+          body: JSON.stringify(Object.assign({ _subject: subject, _replyto: replyTo || "" }, data)),
         });
-        if (!res.ok) return "error";
-        // FormSubmit answers 200 with success "false" (e.g. inbox not yet activated).
-        const json = await res.json().catch(() => ({}));
-        return String(json.success) === "false" ? "error" : "sent";
+        return res.ok ? "sent" : "error";
       } catch (err) {
         return "error";
       }
