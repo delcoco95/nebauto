@@ -19,7 +19,6 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     applyConfig();
-    initIntro();
     initHeaderScroll();
     initHeroParallax();
     initLazyVideos();
@@ -98,15 +97,6 @@
       },
       { passive: true }
     );
-  }
-
-  /* ---------------- Intro: hero title line-mask reveal ---------------- */
-  function initIntro() {
-    // Two frames so the initial (hidden) state is painted before the transition starts;
-    // the timeout covers tabs opened in the background, where rAF is suspended.
-    const reveal = () => document.body.classList.add("is-loaded");
-    requestAnimationFrame(() => requestAnimationFrame(reveal));
-    setTimeout(reveal, 400);
   }
 
   /* ---------------- Background videos: loaded only near the viewport, paused off-screen ---------------- */
@@ -439,6 +429,33 @@
       { threshold: 0.15, rootMargin: "0px 0px -60px 0px" }
     );
     items.forEach((el) => io.observe(el));
+
+    // Catch-up: a fast scroll or an anchor jump can carry an element past the viewport
+    // without the observer ever reporting it, which would leave it invisible for good.
+    let pending = Array.from(items);
+    let ticking = false;
+    const catchUp = () => {
+      ticking = false;
+      const limit = window.innerHeight;
+      pending = pending.filter((el) => {
+        if (el.classList.contains("is-visible")) return false;
+        if (el.getBoundingClientRect().top < limit) {
+          el.classList.add("is-visible");
+          io.unobserve(el);
+          return false;
+        }
+        return true;
+      });
+      if (!pending.length) window.removeEventListener("scroll", onScroll);
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        setTimeout(catchUp, 150);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    setTimeout(catchUp, 600);
   }
 
   /* ---------------- Smooth anchor scrolling (fixed header offset) ---------------- */
