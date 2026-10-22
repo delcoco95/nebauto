@@ -389,6 +389,55 @@ body.nav-open { overflow: hidden; }
 }
 
 /* ==========================================================================
+   Parcours — road drawn on scroll, car follows the path (anime.js)
+   Without the enhancement it is a normal section with the road fully drawn.
+   ========================================================================== */
+.parcours { position: relative; padding: 120px 0; border-top: 1px solid var(--line-soft); }
+.parcours.is-enhanced { height: 300vh; padding: 0; }
+.parcours.is-enhanced .parcours-sticky {
+  position: sticky; top: 0; height: 100vh; height: 100svh;
+  display: flex; align-items: center; overflow: hidden;
+}
+.parcours-head { margin-bottom: 30px; }
+
+.road { margin: 0 -10px 34px; }
+.road-svg { width: 100%; height: auto; max-height: 30vh; overflow: visible; }
+.road-base, .road-dash, .road-progress { fill: none; stroke-linecap: round; }
+.road-base { stroke: var(--line); stroke-width: 22; }
+.road-dash { stroke: rgba(244, 242, 238, 0.18); stroke-width: 1.5; stroke-dasharray: 10 14; }
+.road-progress { stroke: var(--accent); stroke-width: 3; filter: drop-shadow(0 0 6px rgba(167, 180, 129, 0.55)); }
+.road-stop { fill: var(--bg); stroke: var(--line); stroke-width: 2; transition: fill .4s var(--ease), stroke .4s var(--ease); }
+.road-stop.is-reached { fill: var(--accent); stroke: var(--accent-2); }
+.road-car { fill: #e9e6df; opacity: 0; }
+.parcours.is-enhanced .road-car { opacity: 1; }
+.road-car-glass { fill: #2a2a26; }
+.road-car-light { fill: var(--accent-2); }
+
+.parcours-steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 22px; }
+.parcours-steps li {
+  display: flex; flex-direction: column; gap: 6px; padding-top: 16px; border-top: 1px solid var(--line-soft);
+  transition: opacity .5s var(--ease), border-color .5s var(--ease);
+}
+.parcours-steps strong { font-family: var(--font-display); font-weight: 400; font-size: 1.08rem; color: var(--text); }
+.parcours-steps li > span:last-child { font-size: 0.86rem; color: var(--text-mute); line-height: 1.5; }
+.parcours.is-enhanced .parcours-steps li { opacity: 0.32; }
+.parcours.is-enhanced .parcours-steps li.is-reached { opacity: 1; border-color: var(--accent); }
+.parcours-cta { margin-top: 38px; }
+
+@media (max-width: 860px) {
+  .parcours-steps { grid-template-columns: 1fr; gap: 0; }
+  .parcours-steps li { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; padding: 10px 0; }
+  .parcours-steps li > span:last-child { flex-basis: 100%; padding-left: 36px; font-size: 0.82rem; }
+  .parcours.is-enhanced .parcours-steps li > span:last-child { display: none; }
+  .parcours.is-enhanced .parcours-steps li.is-current > span:last-child { display: block; }
+  .road { margin-bottom: 18px; }
+  .parcours-cta { margin-top: 22px; }
+}
+
+/* Motion: pointer tilt on selection cards needs a 3D context. */
+.selection-card { transform-style: preserve-3d; will-change: transform; }
+
+/* ==========================================================================
    Finder — sourcing questionnaire (3 steps)
    ========================================================================== */
 .finder { border-top: 1px solid var(--line-soft); }

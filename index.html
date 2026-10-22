@@ -27,11 +27,12 @@
 <meta property="og:description" content="Achat, revente, location, petite mécanique, aide à l'achat et convoyage en Île-de-France.">
 <meta property="og:image" content="https://images.unsplash.com/photo-1711523164285-71e1dbb948ca?auto=format&fit=crop&w=1200&q=80">
 
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="css/style.css?v=11">
+<link rel="stylesheet" href="css/style.css?v=12">
 <script>document.documentElement.classList.add("js");</script>
 
 <script type="application/ld+json">
@@ -84,7 +85,7 @@
       <li><a href="#hero"><span class="nav-idx">01</span><span>Accueil</span></a></li>
       <li><a href="#services"><span class="nav-idx">02</span><span>Services</span></a></li>
       <li><a href="#selection"><span class="nav-idx">03</span><span>Sélection</span></a></li>
-      <li><a href="#recherche"><span class="nav-idx">04</span><span>Trouver ma voiture</span></a></li>
+      <li><a href="#parcours"><span class="nav-idx">04</span><span>Trouver ma voiture</span></a></li>
       <li><a href="#zone"><span class="nav-idx">05</span><span>Zone d'intervention</span></a></li>
       <li><a href="#faq"><span class="nav-idx">06</span><span>FAQ</span></a></li>
     </ol>
@@ -143,7 +144,7 @@
         <h2>Ce que nous faisons</h2>
       </div>
 
-      <ol class="service-list" data-reveal>
+      <ol class="service-list">
         <li>
           <span class="num">01</span>
           <span class="s-title">Achat</span>
@@ -225,6 +226,46 @@
           <div class="selection-media"><img loading="lazy" src="https://images.unsplash.com/photo-1760713164476-7eb5063b3d07?auto=format&fit=crop&w=1000&q=80" alt="Break familial"></div>
           <figcaption>Break familial</figcaption>
         </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PARCOURS (scroll-driven road, anime.js) ============ -->
+  <section class="parcours" id="parcours" aria-labelledby="parcoursTitle">
+    <div class="parcours-sticky">
+      <div class="container">
+        <div class="section-label parcours-head">
+          <span class="eyebrow">Recherche sur mesure</span>
+          <h2 id="parcoursTitle">De votre demande<br><em>à vos clés.</em></h2>
+        </div>
+
+        <div class="road" aria-hidden="true">
+          <svg class="road-svg" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMid meet">
+            <path class="road-base" d="M 30 230 C 200 230 230 70 400 70 S 600 230 780 220 S 1000 70 1170 80"/>
+            <path class="road-dash" d="M 30 230 C 200 230 230 70 400 70 S 600 230 780 220 S 1000 70 1170 80"/>
+            <path class="road-progress" id="roadPath" d="M 30 230 C 200 230 230 70 400 70 S 600 230 780 220 S 1000 70 1170 80"/>
+            <g class="road-stops"></g>
+            <g class="road-car" id="roadCar">
+              <rect x="-22" y="-11" width="44" height="22" rx="7"/>
+              <rect class="road-car-glass" x="2" y="-8" width="10" height="16" rx="2"/>
+              <rect class="road-car-glass" x="-16" y="-7" width="7" height="14" rx="2"/>
+              <circle class="road-car-light" cx="21" cy="-6" r="2"/>
+              <circle class="road-car-light" cx="21" cy="6" r="2"/>
+            </g>
+          </svg>
+        </div>
+
+        <ol class="parcours-steps">
+          <li><span class="num">01</span><strong>Votre demande</strong><span>Budget, modèle, critères : vous remplissez le questionnaire.</span></li>
+          <li><span class="num">02</span><strong>Recherche</strong><span>Nous ciblons les annonces pertinentes et vérifions l'historique.</span></li>
+          <li><span class="num">03</span><strong>Contrôle</strong><span>Inspection mécanique avant toute proposition.</span></li>
+          <li><span class="num">04</span><strong>Négociation & démarches</strong><span>Prix négocié, paiement et carte grise gérés par nos soins.</span></li>
+          <li><span class="num">05</span><strong>Livraison</strong><span>Convoyage du véhicule jusqu'à chez vous.</span></li>
+        </ol>
+
+        <div class="parcours-cta">
+          <a href="#recherche" class="btn-line">Lancer ma recherche</a>
+        </div>
       </div>
     </div>
   </section>
@@ -583,7 +624,8 @@
   </div>
 </div>
 
-<script src="js/globe.js?v=11" defer></script>
-<script src="js/main.js?v=11" defer></script>
+<script src="js/globe.js?v=12" defer></script>
+<script src="js/main.js?v=12" defer></script>
+<script src="js/showcase.js?v=12" defer></script>
 </body>
 </html>
