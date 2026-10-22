@@ -23,7 +23,6 @@
     initHeroParallax();
     initLazyVideos();
     initScrollEffects();
-    initServicePreview();
     initMagneticButtons();
     initNavOverlay();
     initModal();
@@ -218,66 +217,6 @@
 
   function easeOut(t) {
     return 1 - Math.pow(1 - t, 3);
-  }
-
-  /* ---------------- Services: image preview that follows the cursor (desktop only) ---------------- */
-  function initServicePreview() {
-    const list = document.querySelector(".service-list");
-    if (!list || !hasFinePointer || prefersReducedMotion) return;
-    const items = Array.from(list.querySelectorAll("li[data-preview]"));
-    if (!items.length) return;
-
-    const preview = document.createElement("div");
-    preview.className = "service-preview";
-    preview.setAttribute("aria-hidden", "true");
-    const imgs = items.map((li) => {
-      const img = document.createElement("img");
-      img.alt = "";
-      img.decoding = "async";
-      img.dataset.src = li.dataset.preview;
-      preview.appendChild(img);
-      return img;
-    });
-    document.body.appendChild(preview);
-
-    let x = 0, y = 0, tx = 0, ty = 0, rafId = null, active = false;
-    const w = 260, h = 325;
-
-    const loop = () => {
-      x += (tx - x) * 0.14;
-      y += (ty - y) * 0.14;
-      preview.style.transform = "translate(" + (x - w / 2) + "px," + (y - h / 2) + "px) rotate(" + clamp((tx - x) * 0.04, -6, 6) + "deg)";
-      if (active || Math.abs(tx - x) > 0.5 || Math.abs(ty - y) > 0.5) rafId = requestAnimationFrame(loop);
-      else rafId = null;
-    };
-    const kick = () => {
-      if (!rafId) rafId = requestAnimationFrame(loop);
-    };
-
-    list.addEventListener("pointerenter", (e) => {
-      imgs.forEach((img) => {
-        if (!img.src) img.src = img.dataset.src;
-      });
-      x = tx = e.clientX;
-      y = ty = e.clientY;
-    });
-    list.addEventListener("pointermove", (e) => {
-      tx = e.clientX;
-      ty = e.clientY;
-      kick();
-    });
-    items.forEach((li, i) => {
-      li.addEventListener("pointerenter", () => {
-        imgs.forEach((img, j) => img.classList.toggle("is-current", i === j));
-        active = true;
-        preview.classList.add("is-active");
-        kick();
-      });
-    });
-    list.addEventListener("pointerleave", () => {
-      active = false;
-      preview.classList.remove("is-active");
-    });
   }
 
   /* ---------------- Magnetic buttons (subtle pull toward the cursor, desktop only) ---------------- */
