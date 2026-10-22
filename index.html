@@ -31,7 +31,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="css/style.css?v=7">
+<link rel="stylesheet" href="css/style.css?v=8">
 <script>document.documentElement.classList.add("js");</script>
 
 <script type="application/ld+json">
@@ -84,8 +84,9 @@
       <li><a href="#hero"><span class="nav-idx">01</span><span>Accueil</span></a></li>
       <li><a href="#services"><span class="nav-idx">02</span><span>Services</span></a></li>
       <li><a href="#selection"><span class="nav-idx">03</span><span>Sélection</span></a></li>
-      <li><a href="#zone"><span class="nav-idx">04</span><span>Zone d'intervention</span></a></li>
-      <li><a href="#faq"><span class="nav-idx">05</span><span>FAQ</span></a></li>
+      <li><a href="#recherche"><span class="nav-idx">04</span><span>Trouver ma voiture</span></a></li>
+      <li><a href="#zone"><span class="nav-idx">05</span><span>Zone d'intervention</span></a></li>
+      <li><a href="#faq"><span class="nav-idx">06</span><span>FAQ</span></a></li>
     </ol>
   </nav>
   <div class="nav-overlay-footer">
@@ -224,6 +225,196 @@
           <div class="selection-media"><img loading="lazy" src="https://images.unsplash.com/photo-1760713164476-7eb5063b3d07?auto=format&fit=crop&w=1000&q=80" alt="Break familial"></div>
           <figcaption>Break familial</figcaption>
         </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SOURCING QUESTIONNAIRE ============ -->
+  <section class="section finder" id="recherche">
+    <div class="container finder-grid">
+      <div class="section-label finder-intro" data-reveal>
+        <span class="eyebrow">Recherche sur mesure</span>
+        <h2>Trouvez-moi<br><em>ma voiture.</em></h2>
+        <p class="finder-lead">Dites-nous ce que vous cherchez. Nous trouvons, contrôlons, négocions
+          et vous livrons le véhicule — vous recevez une proposition clé en main.</p>
+        <ol class="finder-steps-list" aria-hidden="true">
+          <li><span>01</span>Votre projet</li>
+          <li><span>02</span>Budget & financement</li>
+          <li><span>03</span>Vos coordonnées</li>
+        </ol>
+      </div>
+
+      <div class="finder-card" data-reveal>
+        <div class="finder-progress" aria-hidden="true"><span id="finderBar"></span></div>
+        <p class="finder-count" id="finderCount" aria-live="polite">Étape 1 sur 3</p>
+
+        <form id="finderForm" novalidate>
+          <!-- Step 1 -->
+          <fieldset class="finder-step is-active" data-step="1">
+            <legend>Quel véhicule recherchez-vous&nbsp;?</legend>
+
+            <div class="field">
+              <span class="field-label" id="fl-type">Type de véhicule</span>
+              <div class="chips" role="group" aria-labelledby="fl-type">
+                <label class="chip"><input type="checkbox" name="type" value="Citadine"><span>Citadine</span></label>
+                <label class="chip"><input type="checkbox" name="type" value="Compacte"><span>Compacte</span></label>
+                <label class="chip"><input type="checkbox" name="type" value="Berline"><span>Berline</span></label>
+                <label class="chip"><input type="checkbox" name="type" value="SUV"><span>SUV</span></label>
+                <label class="chip"><input type="checkbox" name="type" value="Break"><span>Break</span></label>
+                <label class="chip"><input type="checkbox" name="type" value="Monospace"><span>Monospace</span></label>
+                <label class="chip"><input type="checkbox" name="type" value="Utilitaire"><span>Utilitaire</span></label>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="ff-model">Marque / modèle souhaité <small>(facultatif)</small></label>
+              <input id="ff-model" name="modele" type="text" placeholder="Ex : Peugeot 3008, Golf 8, Tesla Model 3...">
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <span class="field-label" id="fl-energy">Énergie</span>
+                <div class="chips" role="radiogroup" aria-labelledby="fl-energy">
+                  <label class="chip"><input type="radio" name="energie" value="Essence"><span>Essence</span></label>
+                  <label class="chip"><input type="radio" name="energie" value="Diesel"><span>Diesel</span></label>
+                  <label class="chip"><input type="radio" name="energie" value="Hybride"><span>Hybride</span></label>
+                  <label class="chip"><input type="radio" name="energie" value="Électrique"><span>Électrique</span></label>
+                  <label class="chip"><input type="radio" name="energie" value="Peu importe" checked><span>Peu importe</span></label>
+                </div>
+              </div>
+              <div class="field">
+                <span class="field-label" id="fl-gear">Boîte de vitesses</span>
+                <div class="chips" role="radiogroup" aria-labelledby="fl-gear">
+                  <label class="chip"><input type="radio" name="boite" value="Manuelle"><span>Manuelle</span></label>
+                  <label class="chip"><input type="radio" name="boite" value="Automatique"><span>Automatique</span></label>
+                  <label class="chip"><input type="radio" name="boite" value="Peu importe" checked><span>Peu importe</span></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label class="field-label" for="ff-km">Kilométrage maximum</label>
+                <select id="ff-km" name="km_max">
+                  <option value="Peu importe">Peu importe</option>
+                  <option value="30 000 km">30 000 km</option>
+                  <option value="60 000 km">60 000 km</option>
+                  <option value="100 000 km">100 000 km</option>
+                  <option value="150 000 km">150 000 km</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field-label" for="ff-year">Année minimum</label>
+                <select id="ff-year" name="annee_min"></select>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Step 2 -->
+          <fieldset class="finder-step" data-step="2">
+            <legend>Votre budget</legend>
+
+            <div class="field">
+              <label class="field-label" for="ff-budget">Budget maximum, tout compris</label>
+              <div class="budget">
+                <output id="ff-budget-out" for="ff-budget">20 000 €</output>
+                <input id="ff-budget" name="budget" type="range" min="3000" max="100000" step="1000" value="20000">
+                <div class="budget-scale" aria-hidden="true"><span>3 000 €</span><span>100 000 € et +</span></div>
+              </div>
+            </div>
+
+            <div class="field">
+              <span class="field-label" id="fl-fin">Mode de paiement</span>
+              <div class="chips" role="radiogroup" aria-labelledby="fl-fin">
+                <label class="chip"><input type="radio" name="financement" value="Comptant" required><span>Comptant</span></label>
+                <label class="chip"><input type="radio" name="financement" value="Crédit"><span>Crédit</span></label>
+                <label class="chip"><input type="radio" name="financement" value="Location (LOA / LLD)"><span>LOA / LLD</span></label>
+                <label class="chip"><input type="radio" name="financement" value="À définir"><span>À définir</span></label>
+              </div>
+              <p class="field-error" data-error-for="financement">Choisissez un mode de paiement.</p>
+            </div>
+
+            <div class="field" id="ff-apport-field" hidden>
+              <label class="field-label" for="ff-apport">Apport envisagé <small>(facultatif)</small></label>
+              <input id="ff-apport" name="apport" type="text" inputmode="numeric" placeholder="Ex : 5 000 €">
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <span class="field-label" id="fl-trade">Reprise de votre véhicule actuel&nbsp;?</span>
+                <div class="chips" role="radiogroup" aria-labelledby="fl-trade">
+                  <label class="chip"><input type="radio" name="reprise" value="Oui"><span>Oui</span></label>
+                  <label class="chip"><input type="radio" name="reprise" value="Non" checked><span>Non</span></label>
+                </div>
+              </div>
+              <div class="field">
+                <label class="field-label" for="ff-delay">Délai souhaité</label>
+                <select id="ff-delay" name="delai">
+                  <option value="Dès que possible">Dès que possible</option>
+                  <option value="Sous 1 mois">Sous 1 mois</option>
+                  <option value="1 à 3 mois" selected>1 à 3 mois</option>
+                  <option value="Pas pressé">Pas pressé</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Step 3 -->
+          <fieldset class="finder-step" data-step="3">
+            <legend>Où vous envoyer nos propositions&nbsp;?</legend>
+
+            <div class="field-row">
+              <div class="field">
+                <label class="field-label" for="ff-name">Nom complet</label>
+                <input id="ff-name" name="nom" type="text" autocomplete="name" required placeholder="Jean Dupont">
+                <p class="field-error" data-error-for="nom">Indiquez votre nom.</p>
+              </div>
+              <div class="field">
+                <label class="field-label" for="ff-zip">Code postal</label>
+                <input id="ff-zip" name="code_postal" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="75000" maxlength="5">
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label class="field-label" for="ff-email">Email</label>
+                <input id="ff-email" name="email" type="email" autocomplete="email" required placeholder="vous@email.fr">
+                <p class="field-error" data-error-for="email">Indiquez un email valide.</p>
+              </div>
+              <div class="field">
+                <label class="field-label" for="ff-phone">Téléphone</label>
+                <input id="ff-phone" name="telephone" type="tel" autocomplete="tel" required placeholder="06 00 00 00 00">
+                <p class="field-error" data-error-for="telephone">Indiquez votre téléphone.</p>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="ff-notes">Précisions <small>(facultatif)</small></label>
+              <textarea id="ff-notes" name="precisions" rows="3" placeholder="Couleur, options indispensables, usage (ville, autoroute)..."></textarea>
+            </div>
+
+            <label class="consent">
+              <input type="checkbox" name="consentement" value="oui" required>
+              <span>J'accepte que NEBAUTO utilise ces informations pour traiter ma demande et me recontacter.
+                Elles ne sont ni revendues ni utilisées à d'autres fins.</span>
+            </label>
+            <p class="field-error" data-error-for="consentement">Votre accord est nécessaire pour traiter la demande.</p>
+          </fieldset>
+
+          <div class="finder-nav">
+            <button type="button" class="finder-back" id="finderBack" hidden>Retour</button>
+            <button type="button" class="btn-line" id="finderNext">Continuer</button>
+            <button type="submit" class="btn-line btn-line-lg" id="finderSubmit" hidden>Envoyer ma demande</button>
+          </div>
+          <p class="finder-status" id="finderStatus" role="status"></p>
+        </form>
+
+        <div class="finder-success" id="finderSuccess" hidden tabindex="-1">
+          <span class="eyebrow">Demande reçue</span>
+          <h3>Merci, on s'en occupe.</h3>
+          <p id="finderSuccessText">Nous revenons vers vous sous 48 h ouvrées avec une première sélection.</p>
+          <button type="button" class="btn-line" id="finderRestart">Nouvelle demande</button>
+        </div>
       </div>
     </div>
   </section>
@@ -392,7 +583,7 @@
   </div>
 </div>
 
-<script src="js/globe.js?v=7" defer></script>
-<script src="js/main.js?v=7" defer></script>
+<script src="js/globe.js?v=8" defer></script>
+<script src="js/main.js?v=8" defer></script>
 </body>
 </html>

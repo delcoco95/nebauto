@@ -11,6 +11,9 @@
     city: "région parisienne",
     region: "Île-de-France",
     coords: { lat: 48.8566, lon: 2.3522 },
+    // Optional form service URL (Formspree, Web3Forms, Getform...) receiving JSON POSTs.
+    // Left empty, requests fall back to a pre-filled email to CONFIG.email.
+    formEndpoint: "",
   };
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -24,6 +27,7 @@
     initLazyVideos();
     initScrollEffects();
     initMagneticButtons();
+    initFinder();
     initNavOverlay();
     initModal();
     initFaq();
@@ -233,6 +237,192 @@
         btn.style.translate = "";
       });
     });
+  }
+
+  /* ---------------- Sourcing questionnaire (3 steps) ---------------- */
+  function initFinder() {
+    const form = document.getElementById("finderForm");
+    if (!form) return;
+    const steps = Array.from(form.querySelectorAll(".finder-step"));
+    const card = form.closest(".finder-card");
+    const bar = document.getElementById("finderBar");
+    const count = document.getElementById("finderCount");
+    const back = document.getElementById("finderBack");
+    const next = document.getElementById("finderNext");
+    const submit = document.getElementById("finderSubmit");
+    const status = document.getElementById("finderStatus");
+    const success = document.getElementById("finderSuccess");
+    const successText = document.getElementById("finderSuccessText");
+    const restart = document.getElementById("finderRestart");
+    let current = 0;
+
+    const yearSelect = form.querySelector("#ff-year");
+    const thisYear = new Date().getFullYear();
+    yearSelect.add(new Option("Peu importe", "Peu importe"));
+    for (let y = thisYear; y >= thisYear - 15; y--) yearSelect.add(new Option(String(y), String(y)));
+
+    const range = form.querySelector("#ff-budget");
+    const rangeOut = form.querySelector("#ff-budget-out");
+    const formatBudget = () => {
+      const v = Number(range.value);
+      return v.toLocaleString("fr-FR") + " €" + (v >= Number(range.max) ? " et +" : "");
+    };
+    const syncBudget = () => {
+      rangeOut.textContent = formatBudget();
+      const pct = ((range.value - range.min) / (range.max - range.min)) * 100;
+      range.style.background = "linear-gradient(90deg, var(--accent) " + pct + "%, var(--line) " + pct + "%)";
+    };
+    range.addEventListener("input", syncBudget);
+    syncBudget();
+
+    const apportField = document.getElementById("ff-apport-field");
+    form.querySelectorAll('input[name="financement"]').forEach((r) =>
+      r.addEventListener("change", () => {
+        apportField.hidden = !(r.checked && r.value !== "Comptant" && r.value !== "À définir");
+      })
+    );
+
+    function show(i) {
+      current = i;
+      steps.forEach((s, j) => s.classList.toggle("is-active", i === j));
+      const last = i === steps.length - 1;
+      back.hidden = i === 0;
+      next.hidden = last;
+      submit.hidden = !last;
+      bar.style.width = ((i + 1) / steps.length) * 100 + "%";
+      count.textContent = "Étape " + (i + 1) + " sur " + steps.length;
+      status.textContent = "";
+      if (card.getBoundingClientRect().top < 0) card.scrollIntoView({ behavior: "smooth", block: "start" });
+      const first = steps[i].querySelector("input:not([type=hidden]), select, textarea");
+      if (first && hasFinePointer) first.focus({ preventScroll: true });
+    }
+
+    function setError(name, on) {
+      const msg = form.querySelector('[data-error-for="' + name + '"]');
+      if (msg) msg.classList.toggle("is-shown", on);
+      const input = form.querySelector('[name="' + name + '"]');
+      const field = input && input.closest(".field");
+      if (field) field.classList.toggle("has-error", on);
+    }
+
+    function validateStep(step) {
+      let firstInvalid = null;
+      const seen = new Set();
+      step.querySelectorAll("[required]").forEach((input) => {
+        if (seen.has(input.name)) return;
+        seen.add(input.name);
+        let ok;
+        if (input.type === "radio") ok = !!step.querySelector('input[name="' + input.name + '"]:checked');
+        else if (input.type === "checkbox") ok = input.checked;
+        else ok = input.value.trim() !== "" && input.checkValidity();
+        setError(input.name, !ok);
+        if (!ok && !firstInvalid) firstInvalid = input;
+      });
+      if (firstInvalid) firstInvalid.focus();
+      return !firstInvalid;
+    }
+
+    // Clear an error as soon as the visitor fixes the field.
+    form.addEventListener("input", (e) => {
+      if (e.target.name) setError(e.target.name, false);
+    });
+    form.addEventListener("change", (e) => {
+      if (e.target.name) setError(e.target.name, false);
+    });
+
+    next.addEventListener("click", () => {
+      if (validateStep(steps[current])) show(current + 1);
+    });
+    back.addEventListener("click", () => show(current - 1));
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      // Enter in a text field on an intermediate step means "continue", not "send".
+      if (current < steps.length - 1) {
+        if (validateStep(steps[current])) show(current + 1);
+        return;
+      }
+      if (!validateStep(steps[current])) return;
+
+      const data = collect();
+      submit.disabled = true;
+      status.textContent = "Envoi en cours...";
+      const result = await sendRequest("Recherche véhicule — " + data["Nom"], data);
+      submit.disabled = false;
+      status.textContent = "";
+
+      if (result === "error") {
+        status.textContent = "L'envoi a échoué. Réessayez ou écrivez-nous à " + CONFIG.email + ".";
+        return;
+      }
+      successText.textContent =
+        result === "mail"
+          ? "Votre messagerie s'est ouverte avec la demande pré-remplie : il ne reste qu'à l'envoyer. Nous revenons vers vous sous 48 h ouvrées."
+          : "Nous revenons vers vous sous 48 h ouvrées avec une première sélection.";
+      form.hidden = true;
+      document.getElementById("finderCount").hidden = true;
+      success.hidden = false;
+      bar.style.width = "100%";
+      success.focus();
+    });
+
+    restart.addEventListener("click", () => {
+      form.reset();
+      syncBudget();
+      apportField.hidden = true;
+      success.hidden = true;
+      form.hidden = false;
+      document.getElementById("finderCount").hidden = false;
+      show(0);
+    });
+
+    function collect() {
+      const fd = new FormData(form);
+      const types = fd.getAll("type");
+      return {
+        "Type de véhicule": types.length ? types.join(", ") : "Peu importe",
+        "Marque / modèle": fd.get("modele") || "Non précisé",
+        "Énergie": fd.get("energie"),
+        "Boîte": fd.get("boite"),
+        "Kilométrage max": fd.get("km_max"),
+        "Année minimum": fd.get("annee_min"),
+        "Budget max": formatBudget(),
+        "Paiement": fd.get("financement"),
+        "Apport": fd.get("apport") || "Non précisé",
+        "Reprise véhicule actuel": fd.get("reprise"),
+        "Délai": fd.get("delai"),
+        "Nom": fd.get("nom"),
+        "Email": fd.get("email"),
+        "Téléphone": fd.get("telephone"),
+        "Code postal": fd.get("code_postal") || "Non précisé",
+        "Précisions": fd.get("precisions") || "Aucune",
+      };
+    }
+  }
+
+  /**
+   * Delivers a request to NEBAUTO. Returns "sent" (form service accepted it),
+   * "mail" (pre-filled email opened in the visitor's mail app) or "error".
+   */
+  async function sendRequest(subject, data) {
+    if (CONFIG.formEndpoint) {
+      try {
+        const res = await fetch(CONFIG.formEndpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(Object.assign({ _subject: subject }, data)),
+        });
+        return res.ok ? "sent" : "error";
+      } catch (err) {
+        return "error";
+      }
+    }
+    const body = Object.keys(data)
+      .map((k) => k + " : " + data[k])
+      .join("\n");
+    window.location.href =
+      "mailto:" + CONFIG.email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    return "mail";
   }
 
   /* ---------------- Fullscreen nav overlay ---------------- */
