@@ -1,4 +1,4 @@
-const CACHE_VERSION = "nebauto-v4";
+const CACHE_VERSION = "nebauto-v5";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -29,6 +29,8 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
+  // Videos stream with Range requests (206), which the Cache API cannot store.
+  if (req.destination === "video" || req.headers.has("range")) return;
 
   const url = new URL(req.url);
 

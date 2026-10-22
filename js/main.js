@@ -13,10 +13,19 @@
     coords: { lat: 48.8566, lon: 2.3522 },
   };
 
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const hasFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const saveData = !!(navigator.connection && navigator.connection.saveData);
+
   document.addEventListener("DOMContentLoaded", () => {
     applyConfig();
+    initIntro();
     initHeaderScroll();
     initHeroParallax();
+    initLazyVideos();
+    initScrollEffects();
+    initServicePreview();
+    initMagneticButtons();
     initNavOverlay();
     initModal();
     initFaq();
@@ -70,7 +79,7 @@
     const hero = document.querySelector(".hero");
     const media = document.querySelector(".hero-media");
     if (!hero || !media) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefersReducedMotion) return;
 
     let ticking = false;
     function update() {
@@ -89,6 +98,212 @@
       },
       { passive: true }
     );
+  }
+
+  /* ---------------- Intro: hero title line-mask reveal ---------------- */
+  function initIntro() {
+    // Two frames so the initial (hidden) state is painted before the transition starts;
+    // the timeout covers tabs opened in the background, where rAF is suspended.
+    const reveal = () => document.body.classList.add("is-loaded");
+    requestAnimationFrame(() => requestAnimationFrame(reveal));
+    setTimeout(reveal, 400);
+  }
+
+  /* ---------------- Background videos: loaded only near the viewport, paused off-screen ---------------- */
+  function initLazyVideos() {
+    const videos = document.querySelectorAll("video[data-video-lazy]");
+    if (!videos.length || prefersReducedMotion || saveData || !("IntersectionObserver" in window)) return;
+
+    const small = window.matchMedia("(max-width: 760px)").matches;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target;
+          if (entry.isIntersecting) {
+            if (!video.dataset.loaded) {
+              video.dataset.loaded = "1";
+              video.muted = true;
+              video.src = (small && video.dataset.srcSmall) || video.dataset.src;
+              video.addEventListener("playing", () => video.classList.add("is-playing"), { once: true });
+            }
+            const p = video.play();
+            if (p && p.catch) p.catch(() => {});
+          } else if (video.dataset.loaded) {
+            video.pause();
+          }
+        });
+      },
+      { rootMargin: "200px 0px" }
+    );
+    videos.forEach((v) => io.observe(v));
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) videos.forEach((v) => v.pause());
+    });
+  }
+
+  /* ---------------- Scroll-linked effects (one rAF-throttled listener) ---------------- */
+  function initScrollEffects() {
+    const tasks = [];
+    const progress = document.getElementById("scrollProgress");
+    if (progress) {
+      tasks.push(() => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        progress.style.transform = "scaleX(" + (max > 0 ? window.scrollY / max : 0) + ")";
+      });
+    }
+
+    document.querySelectorAll("[data-scroll-words]").forEach((el) => {
+      const words = splitWords(el);
+      if (prefersReducedMotion) {
+        words.forEach((w) => w.classList.add("is-lit"));
+        return;
+      }
+      tasks.push(() => {
+        const vh = window.innerHeight;
+        const rect = el.getBoundingClientRect();
+        const p = clamp((vh * 0.85 - rect.top) / (rect.height + vh * 0.35), 0, 1);
+        const lit = Math.round(p * words.length);
+        words.forEach((w, i) => w.classList.toggle("is-lit", i < lit));
+      });
+    });
+
+    const film = document.querySelector(".film-frame");
+    if (film && !prefersReducedMotion) {
+      tasks.push(() => {
+        const vh = window.innerHeight;
+        const rect = film.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > vh) return;
+        const p = clamp((vh - rect.top) / (vh * 1.1), 0, 1);
+        film.style.setProperty("--inset", (1 - easeOut(p)).toFixed(4));
+      });
+    }
+
+    if (!tasks.length) return;
+    let ticking = false;
+    const run = () => {
+      tasks.forEach((t) => t());
+      ticking = false;
+    };
+    const request = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(run);
+      }
+    };
+    run();
+    window.addEventListener("scroll", request, { passive: true });
+    window.addEventListener("resize", request);
+  }
+
+  function splitWords(root) {
+    const words = [];
+    Array.from(root.childNodes).forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const frag = document.createDocumentFragment();
+        node.textContent.split(/(\s+)/).forEach((part) => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) {
+            frag.appendChild(document.createTextNode(part));
+            return;
+          }
+          const span = document.createElement("span");
+          span.className = "w";
+          span.textContent = part;
+          frag.appendChild(span);
+          words.push(span);
+        });
+        node.replaceWith(frag);
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        words.push(...splitWords(node));
+      }
+    });
+    return words;
+  }
+
+  function clamp(v, min, max) {
+    return Math.min(max, Math.max(min, v));
+  }
+
+  function easeOut(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  /* ---------------- Services: image preview that follows the cursor (desktop only) ---------------- */
+  function initServicePreview() {
+    const list = document.querySelector(".service-list");
+    if (!list || !hasFinePointer || prefersReducedMotion) return;
+    const items = Array.from(list.querySelectorAll("li[data-preview]"));
+    if (!items.length) return;
+
+    const preview = document.createElement("div");
+    preview.className = "service-preview";
+    preview.setAttribute("aria-hidden", "true");
+    const imgs = items.map((li) => {
+      const img = document.createElement("img");
+      img.alt = "";
+      img.decoding = "async";
+      img.dataset.src = li.dataset.preview;
+      preview.appendChild(img);
+      return img;
+    });
+    document.body.appendChild(preview);
+
+    let x = 0, y = 0, tx = 0, ty = 0, rafId = null, active = false;
+    const w = 260, h = 325;
+
+    const loop = () => {
+      x += (tx - x) * 0.14;
+      y += (ty - y) * 0.14;
+      preview.style.transform = "translate(" + (x - w / 2) + "px," + (y - h / 2) + "px) rotate(" + clamp((tx - x) * 0.04, -6, 6) + "deg)";
+      if (active || Math.abs(tx - x) > 0.5 || Math.abs(ty - y) > 0.5) rafId = requestAnimationFrame(loop);
+      else rafId = null;
+    };
+    const kick = () => {
+      if (!rafId) rafId = requestAnimationFrame(loop);
+    };
+
+    list.addEventListener("pointerenter", (e) => {
+      imgs.forEach((img) => {
+        if (!img.src) img.src = img.dataset.src;
+      });
+      x = tx = e.clientX;
+      y = ty = e.clientY;
+    });
+    list.addEventListener("pointermove", (e) => {
+      tx = e.clientX;
+      ty = e.clientY;
+      kick();
+    });
+    items.forEach((li, i) => {
+      li.addEventListener("pointerenter", () => {
+        imgs.forEach((img, j) => img.classList.toggle("is-current", i === j));
+        active = true;
+        preview.classList.add("is-active");
+        kick();
+      });
+    });
+    list.addEventListener("pointerleave", () => {
+      active = false;
+      preview.classList.remove("is-active");
+    });
+  }
+
+  /* ---------------- Magnetic buttons (subtle pull toward the cursor, desktop only) ---------------- */
+  function initMagneticButtons() {
+    if (!hasFinePointer || prefersReducedMotion) return;
+    document.querySelectorAll(".btn-line").forEach((btn) => {
+      btn.addEventListener("pointermove", (e) => {
+        const r = btn.getBoundingClientRect();
+        const dx = (e.clientX - r.left - r.width / 2) * 0.16;
+        const dy = (e.clientY - r.top - r.height / 2) * 0.28;
+        btn.style.translate = dx.toFixed(1) + "px " + dy.toFixed(1) + "px";
+      });
+      btn.addEventListener("pointerleave", () => {
+        btn.style.translate = "";
+      });
+    });
   }
 
   /* ---------------- Fullscreen nav overlay ---------------- */

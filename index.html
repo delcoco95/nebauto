@@ -32,6 +32,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="css/style.css">
+<script>document.documentElement.classList.add("js");</script>
 
 <script type="application/ld+json">
 {
@@ -56,6 +57,7 @@
 <body>
 
 <a href="#hero" class="skip-link">Aller au contenu</a>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
 <!-- ============ HEADER ============ -->
 <header class="site-header" id="siteHeader">
@@ -98,11 +100,18 @@
   <section class="hero" id="hero">
     <div class="hero-media">
       <img src="https://images.unsplash.com/photo-1711523164285-71e1dbb948ca?auto=format&fit=crop&w=2000&q=80" alt="" loading="eager" fetchpriority="high">
+      <video class="hero-video" muted loop playsinline preload="none" aria-hidden="true"
+        data-video-lazy
+        data-src="https://videos.pexels.com/video-files/6872095/6872095-hd_1280_720_25fps.mp4"
+        data-src-small="https://videos.pexels.com/video-files/6872095/6872095-sd_960_540_25fps.mp4"></video>
       <div class="hero-scrim"></div>
     </div>
 
     <div class="container hero-content">
-      <h1 data-reveal>L'automobile,<br><em>sans compromis.</em></h1>
+      <h1 class="hero-title">
+        <span class="line"><span>L'automobile,</span></span>
+        <span class="line"><span><em>sans compromis.</em></span></span>
+      </h1>
       <p class="hero-sub" data-reveal>Achat, entretien, location et recherche sur mesure — une seule exigence, la qualité.</p>
       <button class="btn-line" type="button" data-open-contact data-reveal>Discuter de mon projet</button>
     </div>
@@ -116,7 +125,7 @@
   <!-- ============ STATEMENT ============ -->
   <section class="statement" id="statement">
     <div class="container statement-inner">
-      <p class="statement-text" data-reveal>
+      <p class="statement-text" data-scroll-words>
         Nous refusons de choisir entre un prix juste et un travail exigeant.
         Chaque véhicule est contrôlé, chaque intervention est expliquée,
         chaque devis est transparent — <em>sans exception.</em>
@@ -134,37 +143,53 @@
       </div>
 
       <ol class="service-list" data-reveal>
-        <li>
+        <li data-preview="https://images.pexels.com/videos/10375432/adult-afro-american-arts-and-crafts-black-10375432.jpeg?auto=compress&cs=tinysrgb&w=640">
           <span class="num">01</span>
           <span class="s-title">Achat</span>
           <span class="s-desc">Estimation rapide, paiement sécurisé, prise en charge immédiate.</span>
         </li>
-        <li>
+        <li data-preview="https://images.pexels.com/videos/6873503/pexels-photo-6873503.jpeg?auto=compress&cs=tinysrgb&w=640">
           <span class="num">02</span>
           <span class="s-title">Revente</span>
           <span class="s-desc">Véhicules contrôlés, historique vérifié, garantie incluse.</span>
         </li>
-        <li>
+        <li data-preview="https://images.pexels.com/videos/13574385/cars-mercedes-car-13574385.jpeg?auto=compress&cs=tinysrgb&w=640">
           <span class="num">03</span>
           <span class="s-title">Location</span>
           <span class="s-desc">Courte ou longue durée, disponibilité rapide.</span>
         </li>
-        <li>
+        <li data-preview="https://images.pexels.com/videos/18101989/pexels-photo-18101989.jpeg?auto=compress&cs=tinysrgb&w=640">
           <span class="num">04</span>
           <span class="s-title">Petite mécanique</span>
           <span class="s-desc">Entretien courant, diagnostic, tarifs transparents.</span>
         </li>
-        <li>
+        <li data-preview="https://images.pexels.com/videos/7875596/-7875596.jpeg?auto=compress&cs=tinysrgb&w=640">
           <span class="num">05</span>
           <span class="s-title">Aide à l'achat</span>
           <span class="s-desc">Vous mandatez, nous négocions le véhicule idéal.</span>
         </li>
-        <li>
+        <li data-preview="https://images.pexels.com/videos/11356024/avenue-car-travel-night-shot-snapshot-11356024.jpeg?auto=compress&cs=tinysrgb&w=640">
           <span class="num">06</span>
           <span class="s-title">Convoyage</span>
           <span class="s-desc">Livraison de votre véhicule, partout en France.</span>
         </li>
       </ol>
+    </div>
+  </section>
+
+  <!-- ============ FILM BAND (scroll-expanding video) ============ -->
+  <section class="film" id="atelier" aria-label="L'atelier">
+    <div class="film-frame">
+      <video class="film-video" muted loop playsinline preload="none" aria-hidden="true"
+        poster="https://images.pexels.com/videos/4488720/pexels-photo-4488720.jpeg?auto=compress&cs=tinysrgb&w=1600"
+        data-video-lazy
+        data-src="https://videos.pexels.com/video-files/4488720/4488720-hd_1366_720_50fps.mp4"
+        data-src-small="https://videos.pexels.com/video-files/4488720/4488720-sd_960_506_25fps.mp4"></video>
+      <div class="film-scrim"></div>
+      <div class="container film-caption">
+        <span class="eyebrow" data-reveal>L'atelier</span>
+        <p class="film-title" data-reveal>Contrôlé.<br>Expliqué.<br><em>Transparent.</em></p>
+      </div>
     </div>
   </section>
 
@@ -180,23 +205,23 @@
     <div class="selection-viewport" data-reveal>
       <div class="selection-track" id="selTrack">
         <figure class="selection-card">
-          <img src="https://images.unsplash.com/photo-1731834888360-7fd7edd6a037?auto=format&fit=crop&w=1000&q=80" alt="Citadine">
+          <div class="selection-media"><img loading="lazy" src="https://images.unsplash.com/photo-1731834888360-7fd7edd6a037?auto=format&fit=crop&w=1000&q=80" alt="Citadine"></div>
           <figcaption>Citadine</figcaption>
         </figure>
         <figure class="selection-card">
-          <img src="https://images.unsplash.com/photo-1765416401686-bead36c5acfa?auto=format&fit=crop&w=1000&q=80" alt="Compacte sportive">
+          <div class="selection-media"><img loading="lazy" src="https://images.unsplash.com/photo-1765416401686-bead36c5acfa?auto=format&fit=crop&w=1000&q=80" alt="Compacte sportive"></div>
           <figcaption>Compacte sportive</figcaption>
         </figure>
         <figure class="selection-card">
-          <img src="https://images.unsplash.com/photo-1776043904123-0988a0c3c60c?auto=format&fit=crop&w=1000&q=80" alt="SUV">
+          <div class="selection-media"><img loading="lazy" src="https://images.unsplash.com/photo-1776043904123-0988a0c3c60c?auto=format&fit=crop&w=1000&q=80" alt="SUV"></div>
           <figcaption>SUV</figcaption>
         </figure>
         <figure class="selection-card">
-          <img src="https://images.unsplash.com/photo-1712214910040-1f7f5925b16a?auto=format&fit=crop&w=1000&q=80" alt="Berline">
+          <div class="selection-media"><img loading="lazy" src="https://images.unsplash.com/photo-1712214910040-1f7f5925b16a?auto=format&fit=crop&w=1000&q=80" alt="Berline"></div>
           <figcaption>Berline</figcaption>
         </figure>
         <figure class="selection-card">
-          <img src="https://images.unsplash.com/photo-1760713164476-7eb5063b3d07?auto=format&fit=crop&w=1000&q=80" alt="Break familial">
+          <div class="selection-media"><img loading="lazy" src="https://images.unsplash.com/photo-1760713164476-7eb5063b3d07?auto=format&fit=crop&w=1000&q=80" alt="Break familial"></div>
           <figcaption>Break familial</figcaption>
         </figure>
       </div>
