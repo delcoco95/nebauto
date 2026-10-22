@@ -11,9 +11,10 @@
     city: "région parisienne",
     region: "Île-de-France",
     coords: { lat: 48.8566, lon: 2.3522 },
-    // Optional form service URL (Formspree, Web3Forms, Getform...) receiving JSON POSTs.
-    // Left empty, requests fall back to a pre-filled email to CONFIG.email.
-    formEndpoint: "",
+    // FormSubmit AJAX endpoint: every questionnaire / contact request is emailed to this inbox.
+    // Once activated, the address can be replaced by the random alias FormSubmit provides
+    // so the inbox stays out of the public source. Empty = fall back to a pre-filled email.
+    formEndpoint: "https://formsubmit.co/ajax/nedjpro06@gmail.com",
   };
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -342,7 +343,7 @@
       const data = collect();
       submit.disabled = true;
       status.textContent = "Envoi en cours...";
-      const result = await sendRequest("Recherche véhicule — " + data["Nom"], data);
+      const result = await sendRequest("Recherche véhicule — " + data["Nom"], data, data["Email"]);
       submit.disabled = false;
       status.textContent = "";
 
@@ -466,15 +467,20 @@
    * Delivers a request to NEBAUTO. Returns "sent" (form service accepted it),
    * "mail" (pre-filled email opened in the visitor's mail app) or "error".
    */
-  async function sendRequest(subject, data) {
+  async function sendRequest(subject, data, replyTo) {
     if (CONFIG.formEndpoint) {
       try {
         const res = await fetch(CONFIG.formEndpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify(Object.assign({ _subject: subject }, data)),
+          body: JSON.stringify(
+            Object.assign({ _subject: subject, _template: "table", _captcha: "false", _replyto: replyTo || "" }, data)
+          ),
         });
-        return res.ok ? "sent" : "error";
+        if (!res.ok) return "error";
+        // FormSubmit answers 200 with success "false" (e.g. inbox not yet activated).
+        const json = await res.json().catch(() => ({}));
+        return String(json.success) === "false" ? "error" : "sent";
       } catch (err) {
         return "error";
       }
@@ -557,14 +563,32 @@
     });
 
     if (form) {
-      form.addEventListener("submit", (e) => {
+      const status = document.getElementById("contactStatus");
+      const submitBtn = form.querySelector('[type="submit"]');
+      form.addEventListener("submit", async (e) => {
         e.preventDefault();
         if (!form.checkValidity()) {
           form.reportValidity();
           return;
         }
-        // No backend wired yet: front-end only confirmation.
-        // Replace this block with a fetch() to your form endpoint / email service.
+        const fd = new FormData(form);
+        const subjectSelect = form.querySelector("#cf-subject");
+        const data = {
+          "Nom": fd.get("name"),
+          "Email": fd.get("email"),
+          "Téléphone": fd.get("phone") || "Non précisé",
+          "Type de demande": subjectSelect.options[subjectSelect.selectedIndex].text,
+          "Message": fd.get("message") || "—",
+        };
+        submitBtn.disabled = true;
+        status.textContent = "Envoi en cours...";
+        const result = await sendRequest("Contact site — " + data["Nom"], data, data["Email"]);
+        submitBtn.disabled = false;
+        status.textContent = "";
+        if (result === "error") {
+          status.textContent = "L'envoi a échoué. Réessayez ou écrivez-nous à " + CONFIG.email + ".";
+          return;
+        }
         form.hidden = true;
         if (success) success.hidden = false;
       });
