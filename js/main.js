@@ -275,12 +275,7 @@
     range.addEventListener("input", syncBudget);
     syncBudget();
 
-    const apportField = document.getElementById("ff-apport-field");
-    form.querySelectorAll('input[name="financement"]').forEach((r) =>
-      r.addEventListener("change", () => {
-        apportField.hidden = !(r.checked && r.value !== "Comptant" && r.value !== "À définir");
-      })
-    );
+    const vehicle = initVehiclePicker(form);
 
     function show(i) {
       current = i;
@@ -369,7 +364,7 @@
     restart.addEventListener("click", () => {
       form.reset();
       syncBudget();
-      apportField.hidden = true;
+      vehicle.reset();
       success.hidden = true;
       form.hidden = false;
       document.getElementById("finderCount").hidden = false;
@@ -381,14 +376,14 @@
       const types = fd.getAll("type");
       return {
         "Type de véhicule": types.length ? types.join(", ") : "Peu importe",
-        "Marque / modèle": fd.get("modele") || "Non précisé",
+        "Marque": fd.get("marque") || "Peu importe",
+        "Modèle": fd.get("modele") || "Peu importe",
+        "Véhicule (précisé)": fd.get("vehicule_autre") || "—",
         "Énergie": fd.get("energie"),
         "Boîte": fd.get("boite"),
         "Kilométrage max": fd.get("km_max"),
         "Année minimum": fd.get("annee_min"),
         "Budget max": formatBudget(),
-        "Paiement": fd.get("financement"),
-        "Apport": fd.get("apport") || "Non précisé",
         "Reprise véhicule actuel": fd.get("reprise"),
         "Délai": fd.get("delai"),
         "Nom": fd.get("nom"),
@@ -398,6 +393,73 @@
         "Précisions": fd.get("precisions") || "Aucune",
       };
     }
+  }
+
+  /**
+   * Brand -> model dependent selects, fed by data/vehicules.json (catalogue of
+   * makes/models sold in France). "Autre" or a failed load falls back to free text.
+   */
+  function initVehiclePicker(form) {
+    const OTHER = "Autre";
+    const brandSel = form.querySelector("#ff-brand");
+    const modelSel = form.querySelector("#ff-model");
+    const otherField = form.querySelector("#ff-other-field");
+    const otherInput = form.querySelector("#ff-other");
+    let catalogue = {};
+
+    const sortFr = (a, b) => a.localeCompare(b, "fr", { numeric: true, sensitivity: "base" });
+
+    function fillModels() {
+      const brand = brandSel.value;
+      const models = catalogue[brand] || [];
+      modelSel.innerHTML = "";
+      if (brand === "Peu importe" || brand === OTHER) {
+        modelSel.add(new Option(brand === OTHER ? "Précisez ci-dessous" : "Choisissez une marque", "Peu importe"));
+        modelSel.disabled = true;
+      } else {
+        modelSel.add(new Option("Peu importe", "Peu importe"));
+        models.slice().sort(sortFr).forEach((m) => modelSel.add(new Option(m, m)));
+        modelSel.add(new Option("Autre modèle", OTHER));
+        modelSel.disabled = false;
+      }
+      syncOther();
+    }
+
+    function syncOther() {
+      const show = brandSel.value === OTHER || modelSel.value === OTHER;
+      otherField.hidden = !show;
+      if (!show) otherInput.value = "";
+    }
+
+    function fallbackToText() {
+      brandSel.closest(".field-row").hidden = true;
+      otherField.hidden = false;
+      otherField.querySelector("label").textContent = "Marque / modèle souhaité (facultatif)";
+    }
+
+    brandSel.addEventListener("change", fillModels);
+    modelSel.addEventListener("change", syncOther);
+
+    fetch("data/vehicules.json")
+      .then((res) => {
+        if (!res.ok) throw new Error(res.status);
+        return res.json();
+      })
+      .then((json) => {
+        catalogue = json.brands || {};
+        Object.keys(catalogue)
+          .sort(sortFr)
+          .forEach((b) => brandSel.add(new Option(b, b)));
+        brandSel.add(new Option("Autre marque", OTHER));
+      })
+      .catch(fallbackToText);
+
+    return {
+      reset() {
+        brandSel.value = "Peu importe";
+        fillModels();
+      },
+    };
   }
 
   /**

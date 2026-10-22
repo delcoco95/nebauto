@@ -31,7 +31,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="css/style.css?v=8">
+<link rel="stylesheet" href="css/style.css?v=9">
 <script>document.documentElement.classList.add("js");</script>
 
 <script type="application/ld+json">
@@ -239,7 +239,7 @@
           et vous livrons le véhicule — vous recevez une proposition clé en main.</p>
         <ol class="finder-steps-list" aria-hidden="true">
           <li><span>01</span>Votre projet</li>
-          <li><span>02</span>Budget & financement</li>
+          <li><span>02</span>Budget & délai</li>
           <li><span>03</span>Vos coordonnées</li>
         </ol>
       </div>
@@ -266,9 +266,24 @@
               </div>
             </div>
 
-            <div class="field">
-              <label class="field-label" for="ff-model">Marque / modèle souhaité <small>(facultatif)</small></label>
-              <input id="ff-model" name="modele" type="text" placeholder="Ex : Peugeot 3008, Golf 8, Tesla Model 3...">
+            <div class="field-row">
+              <div class="field">
+                <label class="field-label" for="ff-brand">Marque</label>
+                <select id="ff-brand" name="marque">
+                  <option value="Peu importe">Peu importe</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field-label" for="ff-model">Modèle</label>
+                <select id="ff-model" name="modele" disabled>
+                  <option value="Peu importe">Choisissez une marque</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field" id="ff-other-field" hidden>
+              <label class="field-label" for="ff-other">Précisez la marque / le modèle</label>
+              <input id="ff-other" name="vehicule_autre" type="text" placeholder="Ex : Lada Niva, Peugeot 3008 GT...">
             </div>
 
             <div class="field-row">
@@ -321,22 +336,6 @@
                 <input id="ff-budget" name="budget" type="range" min="3000" max="100000" step="1000" value="20000">
                 <div class="budget-scale" aria-hidden="true"><span>3 000 €</span><span>100 000 € et +</span></div>
               </div>
-            </div>
-
-            <div class="field">
-              <span class="field-label" id="fl-fin">Mode de paiement</span>
-              <div class="chips" role="radiogroup" aria-labelledby="fl-fin">
-                <label class="chip"><input type="radio" name="financement" value="Comptant" required><span>Comptant</span></label>
-                <label class="chip"><input type="radio" name="financement" value="Crédit"><span>Crédit</span></label>
-                <label class="chip"><input type="radio" name="financement" value="Location (LOA / LLD)"><span>LOA / LLD</span></label>
-                <label class="chip"><input type="radio" name="financement" value="À définir"><span>À définir</span></label>
-              </div>
-              <p class="field-error" data-error-for="financement">Choisissez un mode de paiement.</p>
-            </div>
-
-            <div class="field" id="ff-apport-field" hidden>
-              <label class="field-label" for="ff-apport">Apport envisagé <small>(facultatif)</small></label>
-              <input id="ff-apport" name="apport" type="text" inputmode="numeric" placeholder="Ex : 5 000 €">
             </div>
 
             <div class="field-row">
@@ -583,7 +582,7 @@
   </div>
 </div>
 
-<script src="js/globe.js?v=8" defer></script>
-<script src="js/main.js?v=8" defer></script>
+<script src="js/globe.js?v=9" defer></script>
+<script src="js/main.js?v=9" defer></script>
 </body>
 </html>
